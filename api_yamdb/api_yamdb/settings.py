@@ -16,6 +16,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'reviews.apps.ReviewsConfig',
+    'api.apps.ApiConfig',
     'users.apps.UsersConfig',
     'rest_framework',
     'django.contrib.admin',
