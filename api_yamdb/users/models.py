@@ -60,6 +60,13 @@ class User(AbstractUser):
         verbose_name='Роль пользователя',
         help_text='Укажите роль пользователя'
     )
+    confirmation_code = models.CharField(
+        'код подтверждения',
+        max_length=255,
+        null=True,
+        blank=False,
+        default='XXXX'
+    )
 
     def __str__(self):
         return str(self.username)
