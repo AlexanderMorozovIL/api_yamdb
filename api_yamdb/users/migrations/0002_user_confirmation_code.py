@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='confirmation_code',
-            field=models.CharField(default='XXXX', max_length=255, null=True, verbose_name='код подтверждения'),
+            field=models.CharField(default='XXXXXX', max_length=255, null=True, verbose_name='код подтверждения'),
         ),
     ]
