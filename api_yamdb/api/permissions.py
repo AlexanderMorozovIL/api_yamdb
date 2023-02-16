@@ -17,11 +17,10 @@ class IsAdminOrReadOnly(permissions.BasePermission):
     Пользователь является супрюзером или админом.
     """
     def has_permission(self, request, view):
-        return (
+        return(
             request.method in permissions.SAFE_METHODS
             or (request.user.is_authenticated
-                and request.user.is_admin
-                )
+            and request.user.is_admin)
         )
 
 

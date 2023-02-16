@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from reviews.models import Category, Genre
+from reviews.models import Category, Genre, Title
 from users.models import User
 from .permissions import AdminOnly
 from reviews.models import Category, Genre
@@ -19,7 +19,8 @@ from .serializers import (GetTokenSerializer,
                           SignSerializer,
                           UserSerializer,
                           CategorySerializer,
-                          GenreSerializer
+                          GenreSerializer,
+                          TitleSerializer
                           )
 from .utils import get_confirmation_code, send_confirmation_code
 
@@ -126,3 +127,8 @@ class CategoryViewSet(ModelViewSet):
 class GenreViewSet(ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+
+
+class TitleViewSet(ModelViewSet):
+    queryset = Title.objects.all()
+    serializer_class = TitleSerializer
