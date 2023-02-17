@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'reviews.apps.ReviewsConfig',
 ]
 
 MIDDLEWARE = [
@@ -126,10 +127,11 @@ AUTH_USER_MODEL = 'users.User'
 
 USERNAME_MAX_LENGTH = 150
 EMAIL_MAX_LENGTH = 254
-CONFIRMATION_CODE_MIN_VALUE = 100000
-CONFIRMATION_CODE_MAX_VALUE = 999999
 DEFAULT_FROM_EMAIL = 'whatisit@mail.com'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+CONFIRMATION_CODE_MIN_VALUE = 100000
+CONFIRMATION_CODE_MAX_VALUE = 999999
+DEFAULT_FROM_EMAIL = 'whatisit@mail.com'

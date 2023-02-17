@@ -10,10 +10,21 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from reviews.models import Category, Genre, Title
 from users.models import User
 from .permissions import AdminOnly
-from .serializers import (GetTokenSerializer, NotAdminSerializer,
-                          SignSerializer, UserSerializer)
+from .serializers import (GetTokenSerializer,
+                          NotAdminSerializer,
+                          SignSerializer,
+                          UserSerializer,
+                          CategorySerializer,
+                          GenreSerializer,
+                          TitleSerializer,
+                          GetTokenSerializer,
+                          NotAdminSerializer,
+                          SignSerializer,
+                          UserSerializer
+                          )
 from .utils import get_confirmation_code, send_confirmation_code
 
 
@@ -109,3 +120,18 @@ class GetTokenView(APIView):
                 )
             }
         )
+
+
+class CategoryViewSet(ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class GenreViewSet(ModelViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+
+
+class TitleViewSet(ModelViewSet):
+    queryset = Title.objects.all()
+    serializer_class = TitleSerializer
