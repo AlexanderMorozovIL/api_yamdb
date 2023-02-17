@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from reviews.models import Category, Genre, Title
+
 from users.models import User
 from users.validators import validate_username
 
@@ -17,7 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
             'bio',
             'role'
         )
-
     def validate_username(self, value):
         """Валидация имени пользователя."""
         return validate_username(value)
