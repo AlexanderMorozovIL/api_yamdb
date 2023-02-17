@@ -15,18 +15,18 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'api.apps.ApiConfig',
+    'users.apps.UsersConfig',
+    'rest_framework_simplejwt',
+    'rest_framework',
+    'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'api.apps.ApiConfig',
-    'users.apps.UsersConfig',
     'reviews.apps.ReviewsConfig',
-    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -127,10 +127,11 @@ AUTH_USER_MODEL = 'users.User'
 
 USERNAME_MAX_LENGTH = 150
 EMAIL_MAX_LENGTH = 254
-CONFIRMATION_CODE_MIN_VALUE = 100000
-CONFIRMATION_CODE_MAX_VALUE = 999999
 DEFAULT_FROM_EMAIL = 'whatisit@mail.com'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+CONFIRMATION_CODE_MIN_VALUE = 100000
+CONFIRMATION_CODE_MAX_VALUE = 999999
+DEFAULT_FROM_EMAIL = 'whatisit@mail.com'

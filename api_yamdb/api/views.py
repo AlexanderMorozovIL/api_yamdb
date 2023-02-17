@@ -13,14 +13,17 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from reviews.models import Category, Genre, Title
 from users.models import User
 from .permissions import AdminOnly
-from reviews.models import Category, Genre
 from .serializers import (GetTokenSerializer,
                           NotAdminSerializer,
                           SignSerializer,
                           UserSerializer,
                           CategorySerializer,
                           GenreSerializer,
-                          TitleSerializer
+                          TitleSerializer,
+                          GetTokenSerializer,
+                          NotAdminSerializer,
+                          SignSerializer,
+                          UserSerializer
                           )
 from .utils import get_confirmation_code, send_confirmation_code
 
