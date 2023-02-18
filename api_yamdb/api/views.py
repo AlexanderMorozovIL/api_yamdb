@@ -12,11 +12,19 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.pagination import LimitOffsetPagination
 
+from reviews.models import Category, Genre, Title
 from users.models import User
 from .permissions import AdminOnly, IsAuthorOrReadOnly
-from .serializers import (GetTokenSerializer, NotAdminSerializer,
-                          SignSerializer, UserSerializer,
-                          CommentsSerializer, ReviewSerializer)
+from .serializers import (GetTokenSerializer,
+                          NotAdminSerializer,
+                          SignSerializer,
+                          CommentsSerializer,
+                          ReviewSerializer,
+                          CategorySerializer,
+                          GenreSerializer,
+                          TitleSerializer,
+                          UserSerializer
+                          )
 from .utils import get_confirmation_code, send_confirmation_code
 
 
