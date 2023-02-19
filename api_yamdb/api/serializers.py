@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from reviews.models import Category, Genre, Title, Review, Comments
+from django.conf import settings
 
+from reviews.models import Category, Genre, Title, Review, Comments
 from users.models import User
 from users.validators import validate_username
 
@@ -35,7 +36,19 @@ class NotAdminSerializer(serializers.ModelSerializer):
 
 
 class SignSerializer(serializers.ModelSerializer):
-    """Сериализатор для регистрции."""
+    """Сериализатор для регистрации."""
+
+    username = serializers.CharField(
+        max_length=settings.USERNAME_MAX_LENGTH,
+        required=True,
+        validators=[
+            validate_username,
+        ]
+    )
+    email = serializers.EmailField(
+        required=True,
+        max_length=settings.EMAIL_MAX_LENGTH
+    )
 
     class Meta:
         model = User

@@ -35,9 +35,10 @@ class UserViewSet(ModelViewSet):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [AdminOnly]
-    filter_backends = [SearchFilter]
-    search_fields = ('username',)
+    permission_classes = (IsAuthenticated, AdminOnly,)
+    lookup_field = 'username'
+    filter_backends = (SearchFilter, )
+    search_fields = ('username', )
 
     @action(
         methods=['GET', 'PATCH'],
@@ -51,14 +52,12 @@ class UserViewSet(ModelViewSet):
                 serializer = UserSerializer(
                     request.user,
                     data=request.data,
-                    partial=True
-                )
+                    partial=True)
             else:
                 serializer = NotAdminSerializer(
                     request.user,
                     data=request.data,
-                    partial=True
-                )
+                    partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
