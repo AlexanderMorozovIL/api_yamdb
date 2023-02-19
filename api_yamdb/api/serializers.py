@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'username', 'email', 'first_name',
             'last_name', 'bio', 'role')
-    
+
     def validate_username(self, value):
         """Проверяет корректность имени пользователя."""
         return validate_username(value)
