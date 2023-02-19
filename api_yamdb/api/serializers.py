@@ -12,15 +12,11 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'bio',
-            'role'
-        )
+            'username', 'email', 'first_name',
+            'last_name', 'bio', 'role')
+    
     def validate_username(self, value):
-        """Валидация имени пользователя."""
+        """Проверяет корректность имени пользователя."""
         return validate_username(value)
 
 
@@ -75,12 +71,14 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('name', 'slug')
         model = Category
+        lookup_field = 'slug'
 
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('name', 'slug')
         model = Genre
+        lookup_field = 'slug'
 
 
 class TitleSerializer(serializers.ModelSerializer):

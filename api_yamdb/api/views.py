@@ -14,7 +14,8 @@ from rest_framework.pagination import LimitOffsetPagination
 
 from reviews.models import Category, Genre, Title
 from users.models import User
-from .permissions import AdminOnly, IsAuthorOrReadOnly
+from .mixins import ModelMixinSet
+from .permissions import AdminOnly, IsAuthorOrReadOnly, IsAdminOrReadOnly
 from .serializers import (GetTokenSerializer,
                           NotAdminSerializer,
                           SignSerializer,
@@ -39,6 +40,7 @@ class UserViewSet(ModelViewSet):
     lookup_field = 'username'
     filter_backends = (SearchFilter, )
     search_fields = ('username', )
+    http_method_names = ['get', 'post', 'head', 'options', 'patch', 'delete']
 
     @action(
         methods=['GET', 'PATCH'],
@@ -158,18 +160,21 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
 
-class CategoryViewSet(ModelViewSet):
+class CategoryViewSet(ModelMixinSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    filter_backends = (SearchFilter,)
-    search_fields = ('name',)
+    permission_classes = (IsAdminOrReadOnly,)
+    filter_backends = (SearchFilter, )
+    search_fields = ('name', )
+    lookup_field = 'slug'
 
-
-class GenreViewSet(ModelViewSet):
+class GenreViewSet(ModelMixinSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+    permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (SearchFilter,)
-    search_fields = ('name',)
+    search_fields = ('name', )
+    lookup_field = 'slug'
 
 
 class TitleViewSet(ModelViewSet):
