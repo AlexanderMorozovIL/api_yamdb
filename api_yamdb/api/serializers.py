@@ -36,7 +36,7 @@ class NotAdminSerializer(serializers.ModelSerializer):
 
 
 class SignSerializer(serializers.ModelSerializer):
-    """Сериализатор для регистрции."""
+    """Сериализатор для регистрации."""
 
     username = serializers.CharField(
         max_length=settings.USERNAME_MAX_LENGTH,
