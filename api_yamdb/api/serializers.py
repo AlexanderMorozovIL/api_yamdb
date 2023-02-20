@@ -1,7 +1,7 @@
-from rest_framework import serializers
 from django.conf import settings
+from rest_framework import serializers
 
-from reviews.models import Category, Genre, Title, Review, Comments
+from reviews.models import Category, Comments, Genre, Review, Title
 from users.models import User
 from users.validators import validate_username
 
@@ -68,6 +68,8 @@ class GetTokenSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    """Сериализатор для Category."""
+
     class Meta:
         fields = ('name', 'slug')
         model = Category
@@ -75,6 +77,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class GenreSerializer(serializers.ModelSerializer):
+    """Сериализатор для Genre."""
+
     class Meta:
         fields = ('name', 'slug')
         model = Genre
@@ -82,6 +86,8 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class TitleSerializer(serializers.ModelSerializer):
+    """Сериализатор для Title."""
+
     name = serializers.CharField(max_length=256)
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
