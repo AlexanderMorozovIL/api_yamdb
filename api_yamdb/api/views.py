@@ -168,6 +168,7 @@ class CategoryViewSet(ModelMixinSet):
     search_fields = ('name', )
     lookup_field = 'slug'
 
+
 class GenreViewSet(ModelMixinSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
