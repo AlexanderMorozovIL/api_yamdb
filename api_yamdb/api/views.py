@@ -15,7 +15,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from reviews.models import Category, Genre, Title
 from users.models import User
 from .mixins import ModelMixinSet
-from .permissions import AdminOnly, IsAuthorOrReadOnly, IsAdminOrReadOnly
+from .permissions import AdminOnly, IsAdminOrReadOnly, AdminModeratorAuthorReadOnly
 from .serializers import (GetTokenSerializer,
                           NotAdminSerializer,
                           SignSerializer,
@@ -130,7 +130,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
-        IsAuthorOrReadOnly
+        AdminModeratorAuthorReadOnly
     ]
 
     def perform_create(self, serializer):
@@ -145,7 +145,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentsSerializer
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
-        IsAuthorOrReadOnly
+        AdminModeratorAuthorReadOnly
     ]
 
     def get_queryset(self):
@@ -181,3 +181,4 @@ class GenreViewSet(ModelMixinSet):
 class TitleViewSet(ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
+    permission_classes = (IsAdminOrReadOnly,)
