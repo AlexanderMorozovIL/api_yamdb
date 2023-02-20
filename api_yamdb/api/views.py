@@ -1,31 +1,25 @@
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
-from reviews.models import Review
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.pagination import LimitOffsetPagination
 
-from reviews.models import Category, Genre, Title
+from reviews.models import Category, Genre, Review, Title
 from users.models import User
 from .mixins import ModelMixinSet
-from .permissions import AdminOnly, IsAdminOrReadOnly, AdminModeratorAuthorReadOnly
-from .serializers import (GetTokenSerializer,
-                          NotAdminSerializer,
-                          SignSerializer,
-                          CommentsSerializer,
-                          ReviewSerializer,
-                          CategorySerializer,
-                          GenreSerializer,
-                          TitleSerializer,
-                          UserSerializer
-                          )
+from .permissions import (AdminModeratorAuthorReadOnly, AdminOnly,
+                          IsAdminOrReadOnly)
+from .serializers import (CategorySerializer, CommentsSerializer,
+                          GenreSerializer, GetTokenSerializer,
+                          NotAdminSerializer, ReviewSerializer, SignSerializer,
+                          TitleSerializer, UserSerializer)
 from .utils import get_confirmation_code, send_confirmation_code
 
 
@@ -124,7 +118,8 @@ class GetTokenView(APIView):
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
-    """Вьюсет для отзывов"""
+    """Вьюсет для отзывов."""
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     pagination_class = LimitOffsetPagination
@@ -141,7 +136,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    """Вьюсет для комментариев"""
+    """Вьюсет для комментариев."""
+
     serializer_class = CommentsSerializer
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
@@ -161,6 +157,8 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class CategoryViewSet(ModelMixinSet):
+    """Вьюсет для категорий."""
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (IsAdminOrReadOnly,)
@@ -170,6 +168,8 @@ class CategoryViewSet(ModelMixinSet):
 
 
 class GenreViewSet(ModelMixinSet):
+    """Вьюсет для жанров."""
+
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     permission_classes = (IsAdminOrReadOnly,)
@@ -179,6 +179,8 @@ class GenreViewSet(ModelMixinSet):
 
 
 class TitleViewSet(ModelViewSet):
+    """Вьюсет для произведения."""
+
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
     permission_classes = (IsAdminOrReadOnly,)

@@ -1,9 +1,12 @@
-from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
+
 from users.models import User
 
 
 class Category(models.Model):
+    """Модель категории."""
+
     name = models.CharField(
         max_length=256,
         verbose_name='Название категории',
@@ -23,6 +26,8 @@ class Category(models.Model):
 
 
 class Genre(models.Model):
+    """Модель жанра."""
+
     name = models.CharField(
         max_length=256,
         verbose_name='Название жанра',
@@ -42,6 +47,8 @@ class Genre(models.Model):
 
 
 class Title(models.Model):
+    """Модель произведения."""
+
     name = models.CharField(
         max_length=256,
         verbose_name='Название произведения',
@@ -75,6 +82,8 @@ class Title(models.Model):
 
 
 class TitleGenre(models.Model):
+    """Модель произведения и жанр."""
+
     genre = models.ForeignKey(
         Genre,
         on_delete=models.CASCADE
@@ -93,6 +102,8 @@ class TitleGenre(models.Model):
 
 
 class Review(models.Model):
+    """Модель отзыва."""
+
     text = models.TextField(
         'Текст поста',
         help_text='Введите текст поста'
@@ -129,6 +140,8 @@ class Review(models.Model):
 
 
 class Comments(models.Model):
+    """Модель комментариев."""
+
     review = models.ForeignKey(
         Review,
         related_name='comments',
@@ -153,4 +166,3 @@ class Comments(models.Model):
     class Meta:
         ordering = ('-pub_date',)
         verbose_name_plural = 'Комментарии'
-
