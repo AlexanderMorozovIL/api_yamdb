@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from reviews.models import Category, Genre, Review, Title
+from reviews.models import Category, Genre, Review, Title, Comments
 from users.models import User
 from .mixins import ModelMixinSet
 from .permissions import (AdminModeratorAuthorReadOnly, AdminOnly,
@@ -128,8 +128,13 @@ class ReviewViewSet(viewsets.ModelViewSet):
         AdminModeratorAuthorReadOnly
     ]
 
+    def get_queryset(self):
+        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+        return Review.objects.filter(title=title)
+
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+        serializer.save(author=self.request.user, title=title)
 
     def perform_update(self, serializer):
         serializer.save(author=self.request.user)
@@ -145,12 +150,17 @@ class CommentViewSet(viewsets.ModelViewSet):
     ]
 
     def get_queryset(self):
-        review = get_object_or_404(Review, id=self.kwargs.get('review_id'))
-        return review.comments.all()
+        return Comments.objects.filter(
+            title=get_object_or_404(
+                Title, pk=self.kwargs.get('title_id')),
+            review=get_object_or_404(
+                Review, pk=self.kwargs.get('review_id'))
+        ).all()
 
     def perform_create(self, serializer):
+        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
         review = get_object_or_404(Review, id=self.kwargs.get('review_id'))
-        serializer.save(author=self.request.user, review=review)
+        serializer.save(author=self.request.user, review=review, title=title)
 
     def perform_update(self, serializer):
         serializer.save(author=self.request.user)
