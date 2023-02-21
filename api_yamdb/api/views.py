@@ -18,8 +18,9 @@ from .permissions import (AdminModeratorAuthorReadOnly, AdminOnly,
                           IsAdminOrReadOnly)
 from .serializers import (CategorySerializer, CommentsSerializer,
                           GenreSerializer, GetTokenSerializer,
-                          NotAdminSerializer, ReviewSerializer, SignSerializer,
-                          TitleSerializer, UserSerializer)
+                          NotAdminSerializer, ReviewSerializer,
+                          SignSerializer, UserSerializer,
+                          TitleSerializerGet, TitleSerializerCreate)
 from .utils import get_confirmation_code, send_confirmation_code
 
 
@@ -192,5 +193,10 @@ class TitleViewSet(ModelViewSet):
     """Вьюсет для произведения."""
 
     queryset = Title.objects.all()
-    serializer_class = TitleSerializer
+    serializer_class = TitleSerializerGet
     permission_classes = (IsAdminOrReadOnly,)
+
+    def get_serializer_class(self):
+        if self.request.method in ('POST', 'PATCH',):
+            return TitleSerializerCreate
+        return TitleSerializerGet

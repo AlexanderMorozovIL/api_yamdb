@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.utils import timezone
 from rest_framework import serializers
 
 from reviews.models import Category, Comments, Genre, Review, Title
@@ -85,9 +86,26 @@ class GenreSerializer(serializers.ModelSerializer):
         lookup_field = 'slug'
 
 
-class TitleSerializer(serializers.ModelSerializer):
+class TitleSerializerGet(serializers.ModelSerializer):
     """Сериализатор для Title."""
+    genre = GenreSerializer(read_only=True, many=True)
+    category = CategorySerializer(read_only=True)
+    rating = serializers.IntegerField(read_only=True)
 
+    class Meta:
+        fields = (
+            'id',
+            'name',
+            'year',
+            'rating',
+            'description',
+            'genre',
+            'category'
+        )
+        model = Title
+
+
+class TitleSerializerCreate(serializers.ModelSerializer):
     name = serializers.CharField(max_length=256)
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
@@ -98,8 +116,14 @@ class TitleSerializer(serializers.ModelSerializer):
         slug_field='slug')
 
     class Meta:
-        fields = '__all__'
+        fields = ('id', 'name', 'year', 'description', 'genre', 'category')
         model = Title
+
+    def validate_year(self, value):
+        if value > timezone.now().year:
+            raise serializers.ValidationError(" год выпуска не может быть"
+                                              "больше текущего")
+        return value
 
 
 class ReviewSerializer(serializers.ModelSerializer):
