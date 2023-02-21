@@ -40,13 +40,13 @@ class User(AbstractUser):
         blank=True,
         max_length=settings.USERNAME_MAX_LENGTH,
         verbose_name='Первоe имя пользователя',
-        help_text='Введите первое имя' 
+        help_text='Введите первое имя'
     )
     last_name = models.CharField(
         blank=True,
         max_length=settings.USERNAME_MAX_LENGTH,
         verbose_name='Фамилия пользователя',
-        help_text='Введите фамилию' 
+        help_text='Введите фамилию'
     )
     bio = models.TextField(
         blank=True,
@@ -75,7 +75,7 @@ class User(AbstractUser):
     def is_user(self):
         """Пользователь по умолчанию."""
         return self.role == User.USER
-    
+
     @property
     def is_moderator(self):
         """Пользователь с правами модератора."""

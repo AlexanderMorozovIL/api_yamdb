@@ -5,4 +5,6 @@ from rest_framework.viewsets import GenericViewSet
 
 class ModelMixinSet(CreateModelMixin, ListModelMixin,
                     DestroyModelMixin, GenericViewSet):
+    """Класс MixinSet для дальнейшего использования."""
+
     pass

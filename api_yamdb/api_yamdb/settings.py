@@ -127,7 +127,7 @@ AUTH_USER_MODEL = 'users.User'
 
 USERNAME_MAX_LENGTH = 150
 EMAIL_MAX_LENGTH = 254
-DEFAULT_FROM_EMAIL = 'whatisit@mail.com'
+DEFAULT_FROM_EMAIL = 'yamdbsupport@mail.com'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
