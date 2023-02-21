@@ -1,4 +1,5 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db.models import Avg
 from django.db import models
 
 from users.models import User
@@ -77,6 +78,10 @@ class Title(models.Model):
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
 
+    @property
+    def rating(self):
+        return self.reviews.aggregate(Avg('score'))['score__avg']
+
     def __str__(self):
         return f'Произведение: {self.name}'
 
@@ -103,9 +108,11 @@ class TitleGenre(models.Model):
 
 class Review(models.Model):
     """Модель отзыва."""
+
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
+        related_name='reviews',
         null=False
     )
     text = models.TextField(
@@ -145,6 +152,7 @@ class Review(models.Model):
 
 class Comments(models.Model):
     """Модель комментариев."""
+
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
