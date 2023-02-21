@@ -103,7 +103,11 @@ class TitleGenre(models.Model):
 
 class Review(models.Model):
     """Модель отзыва."""
-
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        null=False
+    )
     text = models.TextField(
         'Текст поста',
         help_text='Введите текст поста'
@@ -130,7 +134,7 @@ class Review(models.Model):
         ordering = ['-pub_date']
         constraints = [
             models.UniqueConstraint(
-                fields=['text', 'author'],
+                fields=['title', 'author'],
                 name='unique_review'
             )
         ]
@@ -141,7 +145,11 @@ class Review(models.Model):
 
 class Comments(models.Model):
     """Модель комментариев."""
-
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        null=False
+    )
     review = models.ForeignKey(
         Review,
         related_name='comments',
