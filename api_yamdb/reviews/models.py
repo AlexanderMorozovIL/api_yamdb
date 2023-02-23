@@ -17,6 +17,7 @@ class Category(models.Model):
         unique=True,
         verbose_name='URL категории'
     )
+    '''REVIEW'''
 
     class Meta:
         verbose_name = 'Категория'
@@ -38,6 +39,7 @@ class Genre(models.Model):
         unique=True,
         verbose_name='URL жанра'
     )
+    '''REVIEW'''
 
     class Meta:
         verbose_name = 'Жанр'
@@ -55,6 +57,7 @@ class Title(models.Model):
         verbose_name='Название произведения',
     )
     year = models.IntegerField(
+        '''REVIEW'''
         verbose_name='Год выпуска произведения',
     )
     description = models.TextField(
@@ -64,6 +67,7 @@ class Title(models.Model):
     genre = models.ManyToManyField(
         Genre,
         through='TitleGenre'
+        '''REVIEW'''
     )
     category = models.ForeignKey(
         Category,
@@ -79,8 +83,10 @@ class Title(models.Model):
         verbose_name_plural = 'Произведения'
 
     @property
+    '''REVIEW'''
     def rating(self):
         return self.reviews.aggregate(Avg('score'))['score__avg']
+        '''REVIEW'''
 
     def __str__(self):
         return f'Произведение: {self.name}'
@@ -114,6 +120,7 @@ class Review(models.Model):
         on_delete=models.CASCADE,
         related_name='reviews',
         null=False
+        '''REVIEW'''
     )
     text = models.TextField(
         'Текст поста',
@@ -123,6 +130,7 @@ class Review(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='review',
+        '''REVIEW'''
         verbose_name='Автор',
         null=False
     )
@@ -131,6 +139,7 @@ class Review(models.Model):
         auto_now_add=True
     )
     score = models.PositiveIntegerField(
+        '''REVIEW'''
         validators=[
             MinValueValidator(1, 'Не меньше 1'),
             MaxValueValidator(10, 'Не больше 10')
@@ -148,12 +157,14 @@ class Review(models.Model):
 
     def __str__(self):
         return self.text
+        '''REVIEW'''
 
 
 class Comments(models.Model):
     """Модель комментариев."""
 
     title = models.ForeignKey(
+        '''REVIEW'''
         Title,
         on_delete=models.CASCADE,
         null=False
@@ -175,6 +186,7 @@ class Comments(models.Model):
         help_text='Введите текст комментария'
     )
     pub_date = models.DateTimeField(
+        '''REVIEW'''
         auto_now_add=True,
         verbose_name='Дата публикации'
     )
@@ -182,3 +194,4 @@ class Comments(models.Model):
     class Meta:
         ordering = ('-pub_date',)
         verbose_name_plural = 'Комментарии'
+        '''REVIEW'''

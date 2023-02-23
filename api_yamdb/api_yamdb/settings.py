@@ -4,10 +4,12 @@ from datetime import timedelta
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
+'''REVIEW'''
 SECRET_KEY = 'p&l%385148kslhtyn^##a1)ilz@4zqj=rq&agdol^##zgl9(vs'
-
+'''REVIEW'''
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+'''REVIEW'''
 
 ALLOWED_HOSTS = ['*']
 
@@ -16,6 +18,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'api.apps.ApiConfig',
+    '''REVIEW'''
     'users.apps.UsersConfig',
     'rest_framework_simplejwt',
     'rest_framework',
@@ -134,4 +137,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 CONFIRMATION_CODE_MIN_VALUE = 100000
 CONFIRMATION_CODE_MAX_VALUE = 999999
+'''REVIEW'''
 DEFAULT_FROM_EMAIL = 'whatisit@mail.com'
+'''REVIEW'''

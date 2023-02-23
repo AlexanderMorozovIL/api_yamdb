@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 
 
 def get_confirmation_code():
+    '''REVIEW'''
     """Генерирует 6-тизначный код."""
     return randint(
         settings.CONFIRMATION_CODE_MIN_VALUE,
@@ -13,6 +14,7 @@ def get_confirmation_code():
 
 
 def send_confirmation_code(user):
+    '''REVIEW'''
     """
     Отправляет код для регистрации на почту.
     В качестве аргумента принимает проверенные данные сериализатора

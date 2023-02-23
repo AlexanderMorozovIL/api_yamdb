@@ -4,6 +4,7 @@ from .models import Category, Genre, Title, Review, Comments, TitleGenre
 
 
 admin.site.register(Category)
+'''REVIEW'''
 admin.site.register(Genre)
 admin.site.register(Title)
 admin.site.register(Review)

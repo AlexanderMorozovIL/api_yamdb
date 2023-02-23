@@ -7,6 +7,7 @@ from rest_framework import serializers
 
 from reviews.models import Category, Comments, Genre, Review, Title
 from users.models import User
+'''REVIEW'''
 from users.validators import validate_username
 
 
@@ -20,8 +21,10 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name', 'bio', 'role')
 
     def validate_username(self, value):
+        '''REVIEW'''
         """Проверяет корректность имени пользователя."""
         return validate_username(value)
+        '''REVIEW'''
 
 
 class NotAdminSerializer(serializers.ModelSerializer):
@@ -32,20 +35,25 @@ class NotAdminSerializer(serializers.ModelSerializer):
         fields = (
             'username', 'email', 'first_name',
             'last_name', 'bio', 'role')
+            '''REVIEW'''
         read_only_fields = ('role',)
 
 
 class SignSerializer(serializers.ModelSerializer):
+    '''REVIEW'''
     """Сериализатор для регистрации."""
 
     username = serializers.CharField(
+        '''REVIEW'''
         max_length=settings.USERNAME_MAX_LENGTH,
         required=True,
         validators=[
+            '''REVIEW'''
             validate_username,
         ]
     )
     email = serializers.EmailField(
+        '''REVIEW'''
         required=True,
         max_length=settings.EMAIL_MAX_LENGTH
     )
@@ -56,6 +64,7 @@ class SignSerializer(serializers.ModelSerializer):
 
 
 class GetTokenSerializer(serializers.ModelSerializer):
+    '''REVIEW'''
     """Сериализатор для получения токена."""
 
     username = serializers.CharField(
@@ -78,6 +87,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('name', 'slug')
         model = Category
         lookup_field = 'slug'
+        '''REVIEW'''
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -90,9 +100,11 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class TitleSerializerGet(serializers.ModelSerializer):
+    '''REVIEW'''
     """Сериализатор для чтения Title."""
 
     genre = GenreSerializer(many=True, read_only=False)
+    '''REVIEW'''
     category = CategorySerializer(read_only=True)
     rating = serializers.IntegerField(read_only=True)
 
@@ -111,6 +123,7 @@ class TitleSerializerGet(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         rating = instance.reviews.aggregate(Avg('score'))['score__avg']
+        '''REVIEW'''
         representation['rating'] = int(rating) if rating is not None else None
         return representation
 
@@ -119,6 +132,7 @@ class TitleSerializerCreate(serializers.ModelSerializer):
     """Сериализатор для создания Title."""
 
     name = serializers.CharField(max_length=256)
+    '''REVIEW'''
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
         slug_field='slug')
@@ -142,6 +156,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     """Сериалайзер для отзывов."""
 
     title = serializers.SlugRelatedField(
+        '''REVIEW'''
         slug_field='name',
         read_only=True
     )
@@ -159,6 +174,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             'score',
             'pub_date',
             'title'
+            '''REVIEW'''
         )
         read_only_fields = (
             'id', 'author', 'pub_date',

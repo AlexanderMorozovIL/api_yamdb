@@ -9,7 +9,7 @@ def validate_username(value):
     '''REVIEW'''
     Допускается использовать только буквы, цифры и символы.
     """
-
+'''REVIEW'''
     pattern = re.compile(r'^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$')
 
     if pattern.fullmatch(value) is None:

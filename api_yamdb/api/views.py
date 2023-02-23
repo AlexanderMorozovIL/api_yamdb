@@ -27,6 +27,7 @@ from .utils import get_confirmation_code, send_confirmation_code
 
 
 class UserViewSet(ModelViewSet):
+    '''REVIEW'''
     """
     Вьюсет модели User.
     """
@@ -34,10 +35,12 @@ class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated, AdminOnly,)
+    '''REVIEW'''
     lookup_field = 'username'
     filter_backends = (SearchFilter, )
     search_fields = ('username', )
     http_method_names = ['get', 'post', 'head', 'options', 'patch', 'delete']
+'''REVIEW'''
 
     @action(
         methods=['GET', 'PATCH'],
@@ -46,8 +49,10 @@ class UserViewSet(ModelViewSet):
         url_path='me')
     def get_current_user_info(self, request):
         serializer = UserSerializer(request.user)
+        '''REVIEW'''
         if request.method == 'PATCH':
             if request.user.is_admin:
+                '''REVIEW'''
                 serializer = UserSerializer(
                     request.user,
                     data=request.data,
@@ -60,7 +65,9 @@ class UserViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
+            '''REVIEW'''
         return Response(serializer.data)
+        '''REVIEW'''
 
 
 class SignView(APIView):
@@ -77,6 +84,7 @@ class SignView(APIView):
         username = serializer.validated_data.get('username')
         email = serializer.validated_data.get('email')
         try:
+            '''REVIEW'''
             user, _ = User.objects.get_or_create(
                 username=username,
                 email=email
@@ -87,6 +95,7 @@ class SignView(APIView):
                  f'в базе с username={username}, email={email}')
             ) from error
         user.confirmation_code = str(get_confirmation_code())
+        '''REVIEW'''
         user.save()
         send_confirmation_code(user)
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
@@ -96,6 +105,7 @@ class GetTokenView(APIView):
     """
     Получение JWT-токена по confirmation code.
     """
+    '''REVIEW'''
 
     def post(self, request):
         serializer = GetTokenSerializer(data=request.data)
@@ -115,17 +125,21 @@ class GetTokenView(APIView):
             {
                 "token": str(
                     RefreshToken.for_user(user).access_token
+                    '''REVIEW'''
                 )
             }
         )
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
+    '''REVIEW'''
     """Вьюсет для отзывов."""
 
     queryset = Review.objects.all()
+    '''REVIEW'''
     serializer_class = ReviewSerializer
     pagination_class = LimitOffsetPagination
+    '''REVIEW'''
     permission_classes = [
         AdminModeratorAuthorReadOnly,
     ]
@@ -144,6 +158,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
+    '''REVIEW'''
     """Вьюсет для комментариев."""
 
     serializer_class = CommentsSerializer
@@ -154,6 +169,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Comments.objects.filter(
+            '''REVIEW'''
             title=get_object_or_404(
                 Title, pk=self.kwargs.get('title_id')),
             review=get_object_or_404(
@@ -199,6 +215,7 @@ class TitleViewSet(ModelViewSet):
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
+        '''REVIEW'''
         filters.OrderingFilter
     ]
     filterset_class = TitleFilter
@@ -207,9 +224,12 @@ class TitleViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method in ('POST', 'PATCH',):
+            '''REVIEW'''
             return TitleSerializerCreate
         return TitleSerializerGet
 
     def get_queryset(self):
+        '''REVIEW'''
         queryset = Title.objects.all()
+        '''REVIEW'''
         return queryset
