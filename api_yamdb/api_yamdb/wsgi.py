@@ -1,3 +1,6 @@
+'''РЕВЬЮ'''
+
+
 """
 WSGI config for YaMDb project.
 

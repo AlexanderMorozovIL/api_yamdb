@@ -1,3 +1,6 @@
+'''РЕВЬЮ'''
+
+
 from django.apps import AppConfig
 
 

@@ -1,3 +1,6 @@
+'''РЕВЬЮ'''
+
+
 """
 ASGI config for YaMDb project.
 

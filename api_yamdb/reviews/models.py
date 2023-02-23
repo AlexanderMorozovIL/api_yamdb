@@ -1,3 +1,6 @@
+'''РЕВЬЮ'''
+
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import Avg
 from django.db import models

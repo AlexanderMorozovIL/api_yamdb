@@ -1,3 +1,6 @@
+'''РЕВЬЮ'''
+
+
 from random import randint
 
 from django.conf import settings
