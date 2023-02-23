@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 def validate_username(value):
     """
     Нельзя использовать имя пользователя me.
+    '''REVIEW'''
     Допускается использовать только буквы, цифры и символы.
     """
 
