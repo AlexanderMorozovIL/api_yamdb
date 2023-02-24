@@ -64,7 +64,7 @@ class User(AbstractUser):
         'код подтверждения',
         max_length=255,
         null=True,
-        blank=False,
+        blank=True,
         default='XXXXXX'
     )
 
