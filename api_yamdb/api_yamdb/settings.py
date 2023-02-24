@@ -3,23 +3,14 @@ from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'p&l%385148kslhtyn^##a1)ilz@4zqj=rq&agdol^##zgl9(vs'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
 
-# Application definition
-
 INSTALLED_APPS = [
-    'api.apps.ApiConfig',
-    'users.apps.UsersConfig',
-    'rest_framework_simplejwt',
-    'rest_framework',
-    'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -27,6 +18,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'reviews.apps.ReviewsConfig',
+    'api.apps.ApiConfig',
+    'users.apps.UsersConfig',
+    'rest_framework_simplejwt',
+    'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
