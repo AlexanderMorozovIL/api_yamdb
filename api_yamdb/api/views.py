@@ -45,7 +45,7 @@ class UserViewSet(ModelViewSetWithoutPUT):
         url_path='me')
     def get_current_user_info(self, request):
         user = request.user
-        serializer = self.get_serializer(user)
+        serializer = self.get_serializer(user, data=request.data, partial=True)
         if request.method == 'PATCH':
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -61,8 +61,12 @@ class SignView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        serializer = SignSerializer(data=request.data)
+        serializer = SignSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
+        if not User.objects.filter(
+            username=request.data['username'],
+            email=request.data['email']).exists():
+            serializer.save()
         user = User.objects.get(username=serializer.data['username'])
         confirmation_code = default_token_generator.make_token(user)
         email = request.data.get('email')
@@ -88,17 +92,13 @@ class GetTokenView(APIView):
         username = serializer.validated_data.get('username')
         confirmation_code = serializer.validated_data['confirmation_code']
         user = get_object_or_404(User, username=username)
-        if user.confirmation_code != confirmation_code:
-            return Response(
-                {
-                    "confirmation_code": ("Неверный код доступа "
-                                          f"{confirmation_code}")
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        return Response(
-            {"token": str(AccessToken.for_user(user))}
-        )
+        if default_token_generator.check_token(user, confirmation_code):
+            if User.objects.filter(username=username).exists():
+                token = AccessToken.for_user(user)
+                return Response({'token': str(token)}, status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReviewViewSet(ModelViewSetWithoutPUT):

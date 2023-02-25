@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'rest_framework_simplejwt',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
