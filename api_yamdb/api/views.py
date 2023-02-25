@@ -36,19 +36,22 @@ class UserViewSet(ModelViewSetWithoutPUT):
     lookup_field = 'username'
     filter_backends = (SearchFilter, )
     search_fields = ('username', )
+    http_method_names = ['get', 'post', 'head', 'options', 'patch', 'delete']
 
     @action(
-        methods=['GET', 'PATCH'],
-        detail=False,
-        permission_classes=(IsAuthenticated,),
-        serializer_class=NotAdminSerializer,
-        url_path='me')
+    methods=['GET', 'PATCH'],
+    detail=False,
+    permission_classes=(IsAuthenticated,),
+    serializer_class=NotAdminSerializer,
+    url_path='me')
     def get_current_user_info(self, request):
         user = request.user
-        serializer = self.get_serializer(user, data=request.data, partial=True)
         if request.method == 'PATCH':
+            serializer = self.get_serializer(user, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
+        else:
+            serializer = self.get_serializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -62,12 +65,21 @@ class SignView(APIView):
 
     def post(self, request):
         serializer = SignSerializer(data=request.data, partial=True)
+        if User.objects.filter(
+            username=request.data.get('username'),
+            email=request.data.get('email')
+        ).exists():
+            user, created = User.objects.get_or_create(
+                    username=request.data.get('username')
+                )
+            if created is False:
+                confirmation_code = default_token_generator.make_token(user)
+                user.confirmation_code = confirmation_code
+                user.save()
+                return Response('токен обновлен', status=status.HTTP_200_OK)
         serializer.is_valid(raise_exception=True)
-        if not User.objects.filter(
-            username=request.data['username'],
-            email=request.data['email']).exists():
-            serializer.save()
-        user = User.objects.get(username=serializer.data['username'])
+        serializer.save()
+        user = User.objects.get(username=serializer.data['username'], email=request.data['email'])
         confirmation_code = default_token_generator.make_token(user)
         email = request.data.get('email')
         send_mail(
