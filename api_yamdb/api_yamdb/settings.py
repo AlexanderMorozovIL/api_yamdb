@@ -1,9 +1,12 @@
 import os
 from datetime import timedelta
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'p&l%385148kslhtyn^##a1)ilz@4zqj=rq&agdol^##zgl9(vs'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = True
 
@@ -57,8 +60,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'api_yamdb.wsgi.application'
 
 
-# Database
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -66,8 +67,6 @@ DATABASES = {
     }
 }
 
-
-# Password validation
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -84,8 +83,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
 
 LANGUAGE_CODE = 'ru-RU'
 
@@ -113,7 +110,6 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# Static files (CSS, JavaScript, Images)
 
 STATIC_URL = '/static/'
 
@@ -128,6 +124,3 @@ DEFAULT_FROM_EMAIL = 'yamdbsupport@mail.com'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
-CONFIRMATION_CODE_MIN_VALUE = 100000
-CONFIRMATION_CODE_MAX_VALUE = 999999
-DEFAULT_FROM_EMAIL = 'whatisit@mail.com'
