@@ -75,6 +75,10 @@ class SignSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'username')
+        extra_kwargs = {
+            'email': {'required': True},
+            'username': {'required': True},
+        }
 
     validators = [
         serializers.UniqueTogetherValidator(
@@ -115,8 +119,8 @@ class SignSerializer(serializers.ModelSerializer):
 class GetTokenSerializer(serializers.Serializer):
     """Сериализатор для получения токена."""
 
-    confirmation_code = serializers.CharField()
-    username = serializers.CharField()
+    confirmation_code = serializers.CharField(required=True)
+    username = serializers.CharField(required=True)
 
 
 class CategorySerializer(serializers.ModelSerializer):

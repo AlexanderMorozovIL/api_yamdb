@@ -6,9 +6,9 @@ from django.core.exceptions import ValidationError
 def validate_username(value):
     """
     Нельзя использовать имя пользователя me.
+
     Допускается использовать только буквы, цифры и символы.
     """
-
     pattern = re.compile(r'^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$')
 
     if pattern.fullmatch(value) is None:
