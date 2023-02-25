@@ -75,12 +75,12 @@ class SignSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'username')
-    
+
     validators = [
-            serializers.UniqueTogetherValidator(
-                queryset=User.objects.all(), fields=['email', 'username']
-            )
-        ]
+        serializers.UniqueTogetherValidator(
+            queryset=User.objects.all(), fields=['email', 'username']
+        )
+    ]
 
     def validate_username(self, value):
         if value == 'me':
@@ -158,7 +158,7 @@ class TitleGetSerializer(serializers.ModelSerializer):
 class TitleCreateSerializer(serializers.ModelSerializer):
     """Сериализатор для создания Title."""
 
-    name = serializers.CharField()
+    name = serializers.CharField(max_length=256)
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
         slug_field='slug')

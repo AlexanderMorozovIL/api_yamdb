@@ -45,7 +45,7 @@ class UserViewSet(ModelViewSetWithoutPUT):
         url_path='me')
     def get_current_user_info(self, request):
         user = request.user
-        serializer = self.get_serializer(user)
+        serializer = self.get_serializer(user, data=request.data, partial=True)
         if request.method == 'PATCH':
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -63,6 +63,9 @@ class SignView(APIView):
     def post(self, request):
         serializer = SignSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        if not User.objects.filter(username=request.data['username'],
+                                   email=request.data['email']).exists():
+            serializer.save()
         user = User.objects.get(username=serializer.data['username'])
         confirmation_code = default_token_generator.make_token(user)
         email = request.data.get('email')
@@ -139,9 +142,8 @@ class CommentViewSet(ModelViewSetWithoutPUT):
         return review.comments.all()
 
     def perform_create(self, serializer):
-        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
         review = get_object_or_404(Review, id=self.kwargs.get('review_id'))
-        serializer.save(author=self.request.user, review=review, title=title)
+        serializer.save(author=self.request.user, review=review)
 
     def perform_update(self, serializer):
         serializer.save(author=self.request.user)
