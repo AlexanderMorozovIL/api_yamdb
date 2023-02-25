@@ -64,7 +64,8 @@ class NotAdminSerializer(serializers.ModelSerializer):
             'email',
             'first_name',
             'last_name',
-            'bio'
+            'bio',
+            'role'
         )
         read_only_fields = ('role',)
 
@@ -75,12 +76,16 @@ class SignSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'username')
-    
+        extra_kwargs = {
+            'email': {'required': True},
+            'username': {'required': True},
+        }
+
     validators = [
-            serializers.UniqueTogetherValidator(
-                queryset=User.objects.all(), fields=['email', 'username']
-            )
-        ]
+        serializers.UniqueTogetherValidator(
+            queryset=User.objects.all(), fields=['email', 'username']
+        )
+    ]
 
     def validate_username(self, value):
         if value == 'me':
@@ -115,8 +120,8 @@ class SignSerializer(serializers.ModelSerializer):
 class GetTokenSerializer(serializers.Serializer):
     """Сериализатор для получения токена."""
 
-    confirmation_code = serializers.CharField()
-    username = serializers.CharField()
+    confirmation_code = serializers.CharField(required=True)
+    username = serializers.CharField(required=True)
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -158,14 +163,16 @@ class TitleGetSerializer(serializers.ModelSerializer):
 class TitleCreateSerializer(serializers.ModelSerializer):
     """Сериализатор для создания Title."""
 
-    name = serializers.CharField()
+    name = serializers.CharField(max_length=256)
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
-        slug_field='slug')
+        slug_field='slug'
+    )
     genre = serializers.SlugRelatedField(
         queryset=Genre.objects.all(),
         many=True,
-        slug_field='slug')
+        slug_field='slug'
+    )
 
     class Meta:
         fields = ('id', 'name', 'year', 'description', 'genre', 'category')
@@ -173,8 +180,10 @@ class TitleCreateSerializer(serializers.ModelSerializer):
 
     def validate_year(self, value):
         if value > timezone.now().year:
-            raise serializers.ValidationError(" год выпуска не может быть"
-                                              "больше текущего")
+            raise serializers.ValidationError(
+                " год выпуска не может быть"
+                "больше текущего"
+            )
         return value
 
 
