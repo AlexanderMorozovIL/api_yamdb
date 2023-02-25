@@ -40,7 +40,6 @@ class UserViewSet(ModelViewSetWithoutPUT):
     lookup_field = 'username'
     filter_backends = (SearchFilter, )
     search_fields = ('username', )
-    http_method_names = ['get', 'post', 'head', 'options', 'patch', 'delete']
 
     @action(
         methods=['GET', 'PATCH'],
