@@ -166,11 +166,13 @@ class TitleCreateSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=256)
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
-        slug_field='slug')
+        slug_field='slug'
+    )
     genre = serializers.SlugRelatedField(
         queryset=Genre.objects.all(),
         many=True,
-        slug_field='slug')
+        slug_field='slug'
+    )
 
     class Meta:
         fields = ('id', 'name', 'year', 'description', 'genre', 'category')
@@ -178,8 +180,10 @@ class TitleCreateSerializer(serializers.ModelSerializer):
 
     def validate_year(self, value):
         if value > timezone.now().year:
-            raise serializers.ValidationError(" год выпуска не может быть"
-                                              "больше текущего")
+            raise serializers.ValidationError(
+                " год выпуска не может быть"
+                "больше текущего"
+            )
         return value
 
 

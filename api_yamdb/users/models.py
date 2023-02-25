@@ -48,14 +48,13 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-    
+
     def clean(self):
         super().clean()
         try:
             validate_username(self.username)
         except ValidationError as e:
             raise ValidationError({'username': e})
-
 
     @property
     def is_user(self):

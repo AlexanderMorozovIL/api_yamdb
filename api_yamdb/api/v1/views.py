@@ -16,13 +16,17 @@ from reviews.models import Category, Genre, Review, Title
 from users.models import User
 from .filters import TitleFilter
 from .mixins import CategoryGenreModelMixin, ModelViewSetWithoutPUT
-from .permissions import (AdminModeratorAuthorReadOnly, AdminOnly,
-                          IsAdminOrReadOnly)
-from .serializers import (CategorySerializer, CommentsSerializer,
-                          GenreSerializer, GetTokenSerializer,
-                          NotAdminSerializer, ReviewSerializer, SignSerializer,
-                          TitleCreateSerializer, TitleGetSerializer,
-                          UserSerializer)
+from .permissions import (
+    AdminModeratorAuthorReadOnly, AdminOnly,
+    IsAdminOrReadOnly
+)
+from .serializers import (
+    CategorySerializer, CommentsSerializer,
+    GenreSerializer, GetTokenSerializer,
+    NotAdminSerializer, ReviewSerializer, SignSerializer,
+    TitleCreateSerializer, TitleGetSerializer,
+    UserSerializer
+)
 
 
 class UserViewSet(ModelViewSetWithoutPUT):
@@ -39,15 +43,20 @@ class UserViewSet(ModelViewSetWithoutPUT):
     http_method_names = ['get', 'post', 'head', 'options', 'patch', 'delete']
 
     @action(
-    methods=['GET', 'PATCH'],
-    detail=False,
-    permission_classes=(IsAuthenticated,),
-    serializer_class=NotAdminSerializer,
-    url_path='me')
+        methods=['GET', 'PATCH'],
+        detail=False,
+        permission_classes=(IsAuthenticated,),
+        serializer_class=NotAdminSerializer,
+        url_path='me'
+    )
     def get_current_user_info(self, request):
         user = request.user
         if request.method == 'PATCH':
-            serializer = self.get_serializer(user, data=request.data, partial=True)
+            serializer = self.get_serializer(
+                user,
+                data=request.data,
+                partial=True
+            )
             serializer.is_valid(raise_exception=True)
             serializer.save()
         else:
@@ -70,8 +79,8 @@ class SignView(APIView):
             email=request.data.get('email')
         ).exists():
             user, created = User.objects.get_or_create(
-                    username=request.data.get('username')
-                )
+                username=request.data.get('username')
+            )
             if created is False:
                 confirmation_code = default_token_generator.make_token(user)
                 user.confirmation_code = confirmation_code
@@ -79,7 +88,10 @@ class SignView(APIView):
                 return Response('токен обновлен', status=status.HTTP_200_OK)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        user = User.objects.get(username=serializer.data['username'], email=request.data['email'])
+        user = User.objects.get(
+            username=serializer.data['username'],
+            email=request.data['email']
+        )
         confirmation_code = default_token_generator.make_token(user)
         email = request.data.get('email')
         send_mail(
@@ -107,7 +119,10 @@ class GetTokenView(APIView):
         if default_token_generator.check_token(user, confirmation_code):
             if User.objects.filter(username=username).exists():
                 token = AccessToken.for_user(user)
-                return Response({'token': str(token)}, status=status.HTTP_200_OK)
+                return Response(
+                    {'token': str(token)},
+                    status=status.HTTP_200_OK
+                )
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -124,13 +139,15 @@ class ReviewViewSet(ModelViewSetWithoutPUT):
     def get_queryset(self):
         title = get_object_or_404(
             Title,
-            id=self.kwargs.get('title_id'))
+            id=self.kwargs.get('title_id')
+        )
         return title.reviews.all()
 
     def perform_create(self, serializer):
         title = get_object_or_404(
             Title,
-            id=self.kwargs.get('title_id'))
+            id=self.kwargs.get('title_id')
+        )
         serializer.save(author=self.request.user, title=title)
 
 
