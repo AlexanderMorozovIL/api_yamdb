@@ -24,6 +24,7 @@ class User(AbstractUser):
         unique=True,
         max_length=settings.EMAIL_MAX_LENGTH,
         null=True,
+        '''REVIEW'''
         blank=False,
         verbose_name='Электронный адрес почты'
     )
@@ -40,6 +41,7 @@ class User(AbstractUser):
 
     class Meta:
         constraints = [
+            '''REVIEW'''
             models.UniqueConstraint(
                 fields=['username', 'email'],
                 name='unique_user_email'

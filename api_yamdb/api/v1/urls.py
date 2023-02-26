@@ -8,6 +8,7 @@ from .views import (
 )
 
 app_name = 'api'
+'''REVIEW'''
 
 router_v1 = DefaultRouter()
 

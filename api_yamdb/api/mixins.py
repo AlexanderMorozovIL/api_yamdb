@@ -1,4 +1,5 @@
 from rest_framework.mixins import (
+    '''REVIEW'''
     CreateModelMixin, DestroyModelMixin,
     ListModelMixin, UpdateModelMixin,
     RetrieveModelMixin
@@ -20,11 +21,13 @@ class CategoryGenreModelMixin(
 
 
 class TitleModelMixin(
+    '''REVIEW'''
     CategoryGenreModelMixin,
     UpdateModelMixin,
     RetrieveModelMixin
 ):
     """Класс MixinSet для категориев и жанров."""
+    '''REVIEW'''
 
     pass
 
@@ -39,6 +42,7 @@ class ModelViewSetWithoutPUT(
     """Набор представлений допускает все методы, кроме PUT."""
 
     def partial_update(self, request, *args, **kwargs):
+        '''REVIEW'''
         instance = self.get_object()
         serializer = self.get_serializer(
             instance,

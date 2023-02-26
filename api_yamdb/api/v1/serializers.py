@@ -10,6 +10,7 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    '''REVIEW'''
     """Сериализатор для User."""
 
     class Meta:
@@ -164,6 +165,7 @@ class TitleCreateSerializer(serializers.ModelSerializer):
     """Сериализатор для создания Title."""
 
     name = serializers.CharField(max_length=256)
+    '''REVIEW'''
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
         slug_field='slug'
@@ -180,6 +182,7 @@ class TitleCreateSerializer(serializers.ModelSerializer):
 
     def validate_year(self, value):
         if value > timezone.now().year:
+            '''REVIEW'''
             raise serializers.ValidationError(
                 " год выпуска не может быть"
                 "больше текущего"

@@ -1,6 +1,7 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import Avg
 from django.db import models
+'''REVIEW'''
 from django.utils import timezone
 
 from users.models import User
@@ -60,6 +61,7 @@ class Title(models.Model):
     year = models.PositiveSmallIntegerField(
         verbose_name='Год выпуска произведения',
         validators=[MaxValueValidator(timezone.now().year)]
+        '''REVIEW'''
     )
     description = models.TextField(
         verbose_name='Описание произведения',
@@ -121,7 +123,7 @@ class Review(models.Model):
         on_delete=models.CASCADE,
         related_name='reviews',
         verbose_name='Произведение'
-
+'''REVIEW'''
     )
     text = models.TextField(
         verbose_name='Текст'
@@ -175,6 +177,7 @@ class Comments(models.Model):
         related_name='comments',
         verbose_name='Автор',
         null=False
+        '''REVIEW'''
     )
     text = models.TextField(
         verbose_name='Текст'
@@ -185,9 +188,11 @@ class Comments(models.Model):
     )
 
     class Meta:
+        '''REVIEW'''
         ordering = ('-pub_date',)
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
     def __str__(self):
         return self.text[:15]
+        '''REVIEW'''

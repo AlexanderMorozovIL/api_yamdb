@@ -58,6 +58,7 @@ class UserViewSet(ModelViewSetWithoutPUT):
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
+            '''REVIEW'''
         else:
             serializer = self.get_serializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -78,13 +79,18 @@ class SignView(APIView):
             email=request.data.get('email')
         ).exists():
             user, created = User.objects.get_or_create(
+                '''REVIEW'''
                 username=request.data.get('username')
             )
             if created is False:
+                '''REVIEW'''
                 confirmation_code = default_token_generator.make_token(user)
                 user.confirmation_code = confirmation_code
+                '''REVIEW'''
                 user.save()
+                '''REVIEW'''
                 return Response('токен обновлен', status=status.HTTP_200_OK)
+                '''REVIEW'''
         serializer.is_valid(raise_exception=True)
         serializer.save()
         user = User.objects.get(
@@ -94,9 +100,11 @@ class SignView(APIView):
         confirmation_code = default_token_generator.make_token(user)
         email = request.data.get('email')
         send_mail(
+            '''REVIEW'''
             'Код подтверждения',
             f'Ваш код: {confirmation_code}',
             from_email=None,
+            '''REVIEW'''
             recipient_list=[email]
         )
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -117,14 +125,17 @@ class GetTokenView(APIView):
         user = get_object_or_404(User, username=username)
         if default_token_generator.check_token(user, confirmation_code):
             if User.objects.filter(username=username).exists():
+                '''REVIEW'''
                 token = AccessToken.for_user(user)
                 return Response(
                     {'token': str(token)},
+                    '''REVIEW'''
                     status=status.HTTP_200_OK
                 )
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+        '''REVIEW'''
 
 
 class ReviewViewSet(ModelViewSetWithoutPUT):
