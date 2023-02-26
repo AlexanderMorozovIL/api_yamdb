@@ -23,7 +23,7 @@ class User(AbstractUser):
     email = models.EmailField(
         unique=True,
         max_length=settings.EMAIL_MAX_LENGTH,
-        null=True,
+        null=False,
         blank=False,
         verbose_name='Электронный адрес почты'
     )
@@ -45,6 +45,8 @@ class User(AbstractUser):
                 name='unique_user_email'
             )
         ]
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 
     def __str__(self):
         return self.username
