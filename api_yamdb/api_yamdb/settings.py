@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 if SECRET_KEY is None:
-    sys.exit('ERROR: SECRET_KEY не найден в окружающей среде')
+    sys.exit('ERROR: SECRET_KEY не найден в среде окружения.')
 
 DEBUG = False
 

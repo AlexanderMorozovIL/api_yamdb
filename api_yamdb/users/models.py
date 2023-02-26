@@ -25,7 +25,7 @@ class User(AbstractUser):
         max_length=settings.EMAIL_MAX_LENGTH,
         null=False,
         blank=False,
-        verbose_name='Электронный адрес почты'
+        verbose_name='Электронная почта'
     )
     bio = models.TextField(
         blank=True,

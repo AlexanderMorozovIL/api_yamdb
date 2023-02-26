@@ -17,13 +17,18 @@ from users.models import User
 
 from .filters import TitleFilter
 from .mixins import CategoryGenreModelMixin, ModelViewSetWithoutPUT
-from .permissions import (AdminModeratorAuthorReadOnly, AdminOnly,
-                          IsAdminOrReadOnly)
-from .serializers import (CategorySerializer, CommentsSerializer,
-                          GenreSerializer, GetTokenSerializer,
-                          ReviewSerializer, SignSerializer,
-                          TitleCreateSerializer, TitleGetSerializer,
-                          UserSerializer)
+from .permissions import (
+    AdminModeratorAuthorReadOnly,
+    AdminOnly,
+    IsAdminOrReadOnly
+)
+from .serializers import (
+    CategorySerializer, CommentsSerializer,
+    GenreSerializer, GetTokenSerializer,
+    ReviewSerializer, SignSerializer,
+    TitleCreateSerializer, TitleGetSerializer,
+    UserSerializer
+)
 
 
 class UserViewSet(ModelViewSetWithoutPUT):
