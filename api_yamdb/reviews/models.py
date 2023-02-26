@@ -1,10 +1,11 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Avg
 from django.utils import timezone
+
 from users.models import User
-from django.conf import settings
 
 
 class Category(models.Model):
@@ -96,7 +97,7 @@ class Title(models.Model):
     @property
     def rating(self):
         return self.reviews.aggregate(Avg('score'))['score__avg']
-    
+
     def clean(self):
         if timezone.now().year < self.year < 1900:
             raise ValidationError('Год выпуска не может быть меньше 1900')

@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import serializers
+
 from reviews.models import Category, Comments, Genre, Review, Title
 
 User = get_user_model()
@@ -144,7 +145,7 @@ class TitleCreateSerializer(serializers.ModelSerializer):
         model = Title
 
     def validate_year(self, value):
-        if 0  < value > timezone.now().year:
+        if 0 < value > timezone.now().year:
             raise serializers.ValidationError(
                 " год выпуска не может быть"
                 "больше текущего"

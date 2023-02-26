@@ -1,6 +1,5 @@
 import os
 import sys
-import logging
 from datetime import timedelta
 
 from dotenv import load_dotenv
@@ -12,8 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 if SECRET_KEY is None:
-    logging.error('ERROR: SECRET_KEY не найден в окружающей среде')
-    sys.exit(1)
+    sys.exit('ERROR: SECRET_KEY не найден в окружающей среде')
 
 DEBUG = False
 
