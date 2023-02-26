@@ -1,4 +1,5 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Avg
 from django.utils import timezone
@@ -59,7 +60,13 @@ class Title(models.Model):
     )
     year = models.PositiveSmallIntegerField(
         verbose_name='Год выпуска произведения',
-        validators=[MaxValueValidator(timezone.now().year)]
+        validators=[
+            MaxValueValidator(timezone.now().year),
+            MinValueValidator(
+                1900,
+                message='Год выпуска не может быть меньше 1900'
+            )
+        ]
     )
     description = models.TextField(
         verbose_name='Описание произведения',
@@ -89,6 +96,10 @@ class Title(models.Model):
     @property
     def rating(self):
         return self.reviews.aggregate(Avg('score'))['score__avg']
+    
+    def clean(self):
+        if timezone.now().year < self.year < 1900:
+            raise ValidationError('Год выпуска не может быть меньше 1900')
 
 
 class TitleGenre(models.Model):

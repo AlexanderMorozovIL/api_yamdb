@@ -53,67 +53,34 @@ class UserSerializer(serializers.ModelSerializer):
         return super().validate(data)
 
 
-class NotAdminSerializer(serializers.ModelSerializer):
-    """Сериализатор для User не админ."""
-
-    class Meta:
-        model = User
-        fields = (
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'bio',
-            'role'
-        )
-        read_only_fields = ('role',)
-
-
-class SignSerializer(serializers.ModelSerializer):
+class SignSerializer(UserSerializer):
     """Сериализатор для регистрации."""
 
-    class Meta:
-        model = User
+    class Meta(UserSerializer.Meta):
         fields = ('email', 'username')
         extra_kwargs = {
             'email': {'required': True},
             'username': {'required': True},
         }
 
-    validators = [
-        serializers.UniqueTogetherValidator(
-            queryset=User.objects.all(), fields=['email', 'username']
-        )
-    ]
-
-    def validate_username(self, value):
-        if value == 'me':
-            raise serializers.ValidationError(
-                'Имя пользователя не может быть me.'
-            )
-
-        return value
-
     def validate(self, data):
-        if User.objects.filter(email=data['email']).exists():
-            if (
-                data['username']
-                != User.objects.get(email=data['email']).username
-            ):
+        super().validate(data)
+        email = data.get('email', None)
+        username = data.get('username', None)
+
+        if User.objects.filter(email=email).exists():
+            if username != User.objects.get(email=email).username:
                 raise serializers.ValidationError(
                     'Этот email уже используется!'
                 )
 
-        if User.objects.filter(username__iexact=data['username']).exists():
-            if (
-                data['email']
-                != User.objects.get(username=data['username']).email
-            ):
+        if User.objects.filter(username__iexact=username).exists():
+            if email != User.objects.get(username=username).email:
                 raise serializers.ValidationError(
                     'Этот username уже используется!'
                 )
 
-        return super().validate(data)
+        return data
 
 
 class GetTokenSerializer(serializers.Serializer):
@@ -162,7 +129,6 @@ class TitleGetSerializer(serializers.ModelSerializer):
 class TitleCreateSerializer(serializers.ModelSerializer):
     """Сериализатор для создания Title."""
 
-    name = serializers.CharField(max_length=256)
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
         slug_field='slug'
@@ -178,7 +144,7 @@ class TitleCreateSerializer(serializers.ModelSerializer):
         model = Title
 
     def validate_year(self, value):
-        if value > timezone.now().year:
+        if 0  < value > timezone.now().year:
             raise serializers.ValidationError(
                 " год выпуска не может быть"
                 "больше текущего"
