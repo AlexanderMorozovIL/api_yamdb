@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.db.models import Avg
@@ -9,21 +10,22 @@ from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import AccessToken
 
 from reviews.models import Category, Genre, Review, Title
 from users.models import User
+
 from .filters import TitleFilter
 from .mixins import CategoryGenreModelMixin, ModelViewSetWithoutPUT
 from .permissions import (
-    AdminModeratorAuthorReadOnly, AdminOnly,
+    AdminModeratorAuthorReadOnly,
+    AdminOnly,
     IsAdminOrReadOnly
 )
 from .serializers import (
     CategorySerializer, CommentsSerializer,
     GenreSerializer, GetTokenSerializer,
-    NotAdminSerializer, ReviewSerializer, SignSerializer,
+    ReviewSerializer, SignSerializer,
     TitleCreateSerializer, TitleGetSerializer,
     UserSerializer
 )
@@ -45,7 +47,6 @@ class UserViewSet(ModelViewSetWithoutPUT):
         methods=['GET', 'PATCH'],
         detail=False,
         permission_classes=(IsAuthenticated,),
-        serializer_class=NotAdminSerializer,
         url_path='me'
     )
     def get_current_user_info(self, request):
@@ -57,7 +58,7 @@ class UserViewSet(ModelViewSetWithoutPUT):
                 partial=True
             )
             serializer.is_valid(raise_exception=True)
-            serializer.save()
+            serializer.save(role=request.user.role)
         else:
             serializer = self.get_serializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -77,14 +78,22 @@ class SignView(APIView):
             username=request.data.get('username'),
             email=request.data.get('email')
         ).exists():
-            user, created = User.objects.get_or_create(
+            user = User.objects.get(
                 username=request.data.get('username')
             )
-            if created is False:
-                confirmation_code = default_token_generator.make_token(user)
-                user.confirmation_code = confirmation_code
-                user.save()
-                return Response('токен обновлен', status=status.HTTP_200_OK)
+            confirmation_code = default_token_generator.make_token(user)
+            user.save()
+            email = request.data.get('email')
+            send_mail(
+                'Код подтверждения',
+                f'Ваш код: {confirmation_code}',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email]
+            )
+            return Response(
+                {'confirmation_code': 'код подтверждения обновлен'},
+                status=status.HTTP_200_OK
+            )
         serializer.is_valid(raise_exception=True)
         serializer.save()
         user = User.objects.get(
@@ -96,7 +105,7 @@ class SignView(APIView):
         send_mail(
             'Код подтверждения',
             f'Ваш код: {confirmation_code}',
-            from_email=None,
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email]
         )
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -116,15 +125,18 @@ class GetTokenView(APIView):
         confirmation_code = serializer.validated_data['confirmation_code']
         user = get_object_or_404(User, username=username)
         if default_token_generator.check_token(user, confirmation_code):
-            if User.objects.filter(username=username).exists():
-                token = AccessToken.for_user(user)
-                return Response(
-                    {'token': str(token)},
-                    status=status.HTTP_200_OK
-                )
-            else:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+            token = AccessToken.for_user(user)
+            return Response(
+                {'token': token},
+                status=status.HTTP_200_OK
+            )
+        return Response(
+            {
+                "confirmation_code": ("Неверный код доступа "
+                                      f"{confirmation_code}")
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 class ReviewViewSet(ModelViewSetWithoutPUT):
@@ -196,7 +208,7 @@ class GenreViewSet(CategoryGenreModelMixin):
     lookup_field = 'slug'
 
 
-class TitleViewSet(ModelViewSet):
+class TitleViewSet(ModelViewSetWithoutPUT):
     """Вьюсет для произведения."""
 
     queryset = Title.objects.select_related('category').annotate(

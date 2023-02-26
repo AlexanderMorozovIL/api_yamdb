@@ -1,12 +1,17 @@
 import os
+import sys
 from datetime import timedelta
+
 from dotenv import load_dotenv
 
 load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
+if SECRET_KEY is None:
+    sys.exit('ERROR: SECRET_KEY не найден в среде окружения.')
 
 DEBUG = False
 
@@ -20,13 +25,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'reviews.apps.ReviewsConfig',
-    'api.apps.ApiConfig',
-    'users.apps.UsersConfig',
-    'rest_framework_simplejwt',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'django_filters',
+    'api.apps.ApiConfig',
+    'reviews.apps.ReviewsConfig',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -118,6 +123,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 
 AUTH_USER_MODEL = 'users.User'
 
+STR_LENGTH = 15
 USERNAME_MAX_LENGTH = 150
 EMAIL_MAX_LENGTH = 254
 DEFAULT_FROM_EMAIL = 'yamdbsupport@mail.com'

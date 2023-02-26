@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import models
 
 from .validators import validate_username
 
@@ -23,9 +23,9 @@ class User(AbstractUser):
     email = models.EmailField(
         unique=True,
         max_length=settings.EMAIL_MAX_LENGTH,
-        null=True,
+        null=False,
         blank=False,
-        verbose_name='Электронный адрес почты'
+        verbose_name='Электронная почта'
     )
     bio = models.TextField(
         blank=True,
@@ -45,6 +45,8 @@ class User(AbstractUser):
                 name='unique_user_email'
             )
         ]
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 
     def __str__(self):
         return self.username

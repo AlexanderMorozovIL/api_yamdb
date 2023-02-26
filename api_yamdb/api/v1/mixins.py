@@ -1,11 +1,10 @@
+from django.db.models import prefetch_related_objects
 from rest_framework.mixins import (
     CreateModelMixin, DestroyModelMixin,
-    ListModelMixin, UpdateModelMixin,
-    RetrieveModelMixin
+    ListModelMixin, RetrieveModelMixin
 )
-from rest_framework.viewsets import GenericViewSet
-from django.db.models import prefetch_related_objects
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 
 
 class CategoryGenreModelMixin(
@@ -13,16 +12,6 @@ class CategoryGenreModelMixin(
     ListModelMixin,
     DestroyModelMixin,
     GenericViewSet
-):
-    """Класс MixinSet для категориев и жанров."""
-
-    pass
-
-
-class TitleModelMixin(
-    CategoryGenreModelMixin,
-    UpdateModelMixin,
-    RetrieveModelMixin
 ):
     """Класс MixinSet для категориев и жанров."""
 

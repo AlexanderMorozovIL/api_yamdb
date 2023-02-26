@@ -1,6 +1,8 @@
+from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db.models import Avg
 from django.db import models
+from django.db.models import Avg
 from django.utils import timezone
 
 from users.models import User
@@ -59,7 +61,13 @@ class Title(models.Model):
     )
     year = models.PositiveSmallIntegerField(
         verbose_name='Год выпуска произведения',
-        validators=[MaxValueValidator(timezone.now().year)]
+        validators=[
+            MaxValueValidator(timezone.now().year),
+            MinValueValidator(
+                1900,
+                message='Год выпуска не может быть меньше 1900'
+            )
+        ]
     )
     description = models.TextField(
         verbose_name='Описание произведения',
@@ -89,6 +97,10 @@ class Title(models.Model):
     @property
     def rating(self):
         return self.reviews.aggregate(Avg('score'))['score__avg']
+
+    def clean(self):
+        if timezone.now().year < self.year < 1900:
+            raise ValidationError('Год выпуска не может быть меньше 1900')
 
 
 class TitleGenre(models.Model):
@@ -121,7 +133,6 @@ class Review(models.Model):
         on_delete=models.CASCADE,
         related_name='reviews',
         verbose_name='Произведение'
-
     )
     text = models.TextField(
         verbose_name='Текст'
@@ -130,8 +141,7 @@ class Review(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='reviews',
-        verbose_name='Автор',
-        null=False
+        verbose_name='Автор'
     )
     pub_date = models.DateTimeField(
         verbose_name='Дата публикации',
@@ -157,7 +167,7 @@ class Review(models.Model):
         verbose_name_plural = 'Отзывы'
 
     def __str__(self):
-        return self.text[:15]
+        return self.text[:settings.STR_LENGTH]
 
 
 class Comments(models.Model):
@@ -173,8 +183,7 @@ class Comments(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='comments',
-        verbose_name='Автор',
-        null=False
+        verbose_name='Автор'
     )
     text = models.TextField(
         verbose_name='Текст'
@@ -186,8 +195,14 @@ class Comments(models.Model):
 
     class Meta:
         ordering = ('-pub_date',)
+        constraints = [
+            models.UniqueConstraint(
+                fields=['review', 'author'],
+                name='unique_comment'
+            )
+        ]
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
     def __str__(self):
-        return self.text[:15]
+        return self.text[:settings.STR_LENGTH]
