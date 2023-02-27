@@ -166,9 +166,6 @@ class CommentViewSet(ModelViewSetWithoutPUT):
         review = get_object_or_404(Review, id=self.kwargs.get('review_id'))
         serializer.save(author=self.request.user, review=review)
 
-    def perform_update(self, serializer):
-        serializer.save(author=self.request.user)
-
 
 class CategoryViewSet(CategoryGenreModelMixin):
     """Вьюсет для категорий."""

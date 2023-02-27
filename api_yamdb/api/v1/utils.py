@@ -4,11 +4,7 @@ from django.core.mail import send_mail
 
 
 def send_confirmation_code(user):
-    """
-    Отправляет код для регистрации на почту.
-    В качестве аргумента принимает проверенные данные сериализатора
-    и объект пользователя.
-    """
+    """Отправляет код для регистрации на почту."""
     confirmation_code = default_token_generator.make_token(user)
     send_mail(
         subject='Регистрация на Yamdb',
