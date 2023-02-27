@@ -13,8 +13,8 @@ from rest_framework_simplejwt.tokens import AccessToken
 from reviews.models import Category, Genre, Review, Title
 from users.models import User
 
-from .filters import TitleFilter
 from .utils import send_confirmation_code
+from .filters import TitleFilter
 from .mixins import CategoryGenreModelMixin, ModelViewSetWithoutPUT
 from .permissions import (
     AdminModeratorAuthorReadOnly,
