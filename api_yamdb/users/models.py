@@ -24,6 +24,7 @@ class User(AbstractUser):
         unique=True,
         max_length=settings.EMAIL_MAX_LENGTH,
         null=False,
+        '''REVIEW'''
         blank=False,
         verbose_name='Электронная почта'
     )

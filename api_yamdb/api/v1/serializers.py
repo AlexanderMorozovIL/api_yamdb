@@ -22,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
             'bio',
             'role'
         )
-
+'''REVIEW'''
         validators = [
             serializers.UniqueTogetherValidator(
                 queryset=User.objects.all(), fields=['email', 'username']
@@ -30,6 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
     def validate_role(self, value):
+        '''REVIEW'''
         if self.context['request'].user.role == 'user':
             return self.context['request'].user.role
 
@@ -61,10 +62,12 @@ class SignSerializer(UserSerializer):
         fields = ('email', 'username')
         extra_kwargs = {
             'email': {'required': True},
+            '''REVIEW'''
             'username': {'required': True},
         }
 
     def validate(self, data):
+        '''REVIEW'''
         super().validate(data)
         email = data.get('email', None)
         username = data.get('username', None)
@@ -146,6 +149,7 @@ class TitleCreateSerializer(serializers.ModelSerializer):
 
     def validate_year(self, value):
         if 0 < value > timezone.now().year:
+            '''REVIEW'''
             raise serializers.ValidationError(
                 " год выпуска не может быть"
                 "больше текущего"

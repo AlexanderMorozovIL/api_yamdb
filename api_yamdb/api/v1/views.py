@@ -83,8 +83,10 @@ class SignView(APIView):
             )
             confirmation_code = default_token_generator.make_token(user)
             user.save()
+            '''REVIEW'''
             email = request.data.get('email')
             send_mail(
+                '''REVIEW'''
                 'Код подтверждения',
                 f'Ваш код: {confirmation_code}',
                 from_email=settings.DEFAULT_FROM_EMAIL,
@@ -103,6 +105,7 @@ class SignView(APIView):
         confirmation_code = default_token_generator.make_token(user)
         email = request.data.get('email')
         send_mail(
+            '''REVIEW'''
             'Код подтверждения',
             f'Ваш код: {confirmation_code}',
             from_email=settings.DEFAULT_FROM_EMAIL,
