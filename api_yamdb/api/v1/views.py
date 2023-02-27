@@ -116,8 +116,10 @@ class GetTokenView(APIView):
             )
         return Response(
             {
-                "confirmation_code": ("Неверный код доступа "
-                                      f"{confirmation_code}")
+                "confirmation_code": (
+                    "Неверный код доступа "
+                    f"{confirmation_code}"
+                )
             },
             status=status.HTTP_400_BAD_REQUEST
         )
