@@ -22,18 +22,11 @@ class UserSerializer(serializers.ModelSerializer):
             'bio',
             'role'
         )
-
         validators = [
             serializers.UniqueTogetherValidator(
                 queryset=User.objects.all(), fields=['email', 'username']
             )
         ]
-
-    def validate_role(self, value):
-        if self.context['request'].user.role == 'user':
-            return self.context['request'].user.role
-
-        return value
 
     def validate_username(self, value):
         if value == 'me':
@@ -59,29 +52,7 @@ class SignSerializer(UserSerializer):
 
     class Meta(UserSerializer.Meta):
         fields = ('email', 'username')
-        extra_kwargs = {
-            'email': {'required': True},
-            'username': {'required': True},
-        }
-
-    def validate(self, data):
-        super().validate(data)
-        email = data.get('email', None)
-        username = data.get('username', None)
-
-        if User.objects.filter(email=email).exists():
-            if username != User.objects.get(email=email).username:
-                raise serializers.ValidationError(
-                    'Этот email уже используется!'
-                )
-
-        if User.objects.filter(username__iexact=username).exists():
-            if email != User.objects.get(username=username).email:
-                raise serializers.ValidationError(
-                    'Этот username уже используется!'
-                )
-
-        return data
+        model = User
 
 
 class GetTokenSerializer(serializers.Serializer):
@@ -145,7 +116,7 @@ class TitleCreateSerializer(serializers.ModelSerializer):
         model = Title
 
     def validate_year(self, value):
-        if 0 < value > timezone.now().year:
+        if 1900 < value > timezone.now().year:
             raise serializers.ValidationError(
                 " год выпуска не может быть"
                 "больше текущего"

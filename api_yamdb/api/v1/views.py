@@ -16,6 +16,7 @@ from reviews.models import Category, Genre, Review, Title
 from users.models import User
 
 from .filters import TitleFilter
+from .utils import send_confirmation_code
 from .mixins import CategoryGenreModelMixin, ModelViewSetWithoutPUT
 from .permissions import (
     AdminModeratorAuthorReadOnly,
@@ -81,15 +82,7 @@ class SignView(APIView):
             user = User.objects.get(
                 username=request.data.get('username')
             )
-            confirmation_code = default_token_generator.make_token(user)
-            user.save()
-            email = request.data.get('email')
-            send_mail(
-                'Код подтверждения',
-                f'Ваш код: {confirmation_code}',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email]
-            )
+            send_confirmation_code(user)
             return Response(
                 {'confirmation_code': 'код подтверждения обновлен'},
                 status=status.HTTP_200_OK
@@ -100,14 +93,7 @@ class SignView(APIView):
             username=serializer.data['username'],
             email=request.data['email']
         )
-        confirmation_code = default_token_generator.make_token(user)
-        email = request.data.get('email')
-        send_mail(
-            'Код подтверждения',
-            f'Ваш код: {confirmation_code}',
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email]
-        )
+        send_confirmation_code(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
