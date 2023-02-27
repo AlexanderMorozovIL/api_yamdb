@@ -1,6 +1,4 @@
-from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -15,6 +13,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 from reviews.models import Category, Genre, Review, Title
 from users.models import User
 
+from .utils import send_confirmation_code
 from .filters import TitleFilter
 from .mixins import CategoryGenreModelMixin, ModelViewSetWithoutPUT
 from .permissions import (
@@ -81,15 +80,7 @@ class SignView(APIView):
             user = User.objects.get(
                 username=request.data.get('username')
             )
-            confirmation_code = default_token_generator.make_token(user)
-            user.save()
-            email = request.data.get('email')
-            send_mail(
-                'Код подтверждения',
-                f'Ваш код: {confirmation_code}',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email]
-            )
+            send_confirmation_code(user)
             return Response(
                 {'confirmation_code': 'код подтверждения обновлен'},
                 status=status.HTTP_200_OK
@@ -100,14 +91,7 @@ class SignView(APIView):
             username=serializer.data['username'],
             email=request.data['email']
         )
-        confirmation_code = default_token_generator.make_token(user)
-        email = request.data.get('email')
-        send_mail(
-            'Код подтверждения',
-            f'Ваш код: {confirmation_code}',
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email]
-        )
+        send_confirmation_code(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -132,8 +116,10 @@ class GetTokenView(APIView):
             )
         return Response(
             {
-                "confirmation_code": ("Неверный код доступа "
-                                      f"{confirmation_code}")
+                "confirmation_code": (
+                    "Неверный код доступа "
+                    f"{confirmation_code}"
+                )
             },
             status=status.HTTP_400_BAD_REQUEST
         )
@@ -181,9 +167,6 @@ class CommentViewSet(ModelViewSetWithoutPUT):
     def perform_create(self, serializer):
         review = get_object_or_404(Review, id=self.kwargs.get('review_id'))
         serializer.save(author=self.request.user, review=review)
-
-    def perform_update(self, serializer):
-        serializer.save(author=self.request.user)
 
 
 class CategoryViewSet(CategoryGenreModelMixin):
