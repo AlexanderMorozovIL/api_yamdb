@@ -28,6 +28,7 @@ class ModelViewSetWithoutPUT(
     """Набор представлений допускает все методы, кроме PUT."""
 
     def partial_update(self, request, *args, **kwargs):
+        '''REVIEW'''
         instance = self.get_object()
         serializer = self.get_serializer(
             instance,
