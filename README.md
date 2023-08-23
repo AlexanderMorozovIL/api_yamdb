@@ -1,4 +1,8 @@
 # YaMDb API
+![Python](https://img.shields.io/badge/-Python-3776AB?style=flat&logo=python&logoColor=white)
+![Django](https://img.shields.io/badge/-Django-092E20?style=flat&logo=django&logoColor=white)
+![Django REST framework](https://img.shields.io/badge/-Django%20REST%20framework-ff9900?style=flat&logo=django&logoColor=white)
+![Postman](https://img.shields.io/badge/-Postman-FF6C37?style=flat&logo=postman&logoColor=white)
 
 ### Краткое описание проекта:
 
@@ -12,6 +16,12 @@
 ```
 http://127.0.0.1:8000/redoc/
 ```
+
+### Стек технологий:
+- Python
+- Django
+- Django Rest Framework
+- Simple-JWT
 
 ### Как запустить проект:
 Клонировать репозиторий, перейти в директорию с проектом.
